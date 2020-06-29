@@ -37,12 +37,40 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   //     
   // World
   //
-  G4double world_sizeXY = 2*cm;
-  G4double world_sizeZ  = 20*cm;
+  G4double world_sizeXY = 50*cm;
+  G4double world_sizeZ  = 50*cm;
   G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
   G4Material* SiO2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-  G4Material* Pb = nist->FindOrBuildMaterial("G4_Pb");
-  
+  G4Material* W = nist->FindOrBuildMaterial("G4_W");
+  G4Material* C = nist->FindOrBuildMaterial("G4_C");
+  G4Material* H = nist->FindOrBuildMaterial("G4_H");
+  G4Material* O = nist->FindOrBuildMaterial("G4_O");
+  G4Material* Cl = nist->FindOrBuildMaterial("G4_Cl");
+  G4Material* Cu = nist->FindOrBuildMaterial("G4_Cu");
+
+  G4Material* epoxy = new G4Material("epoxy",1.3*g/cm3,3);
+  epoxy->AddMaterial(C,0.5354);
+  epoxy->AddMaterial(H,0.1318);
+  epoxy->AddMaterial(O,0.3328);
+
+  G4Material* G10 = new G4Material("G10",1.3*g/cm3,3);
+  G10->AddMaterial(Cl,0.080);
+  G10->AddMaterial(epoxy,0.147);
+  G10->AddMaterial(SiO2,0.773);
+/*
+  <material name="Epoxy" state="solid">
+   <D value="1.3" unit="g/cm3"/>
+   <fraction n="0.5354" ref="C"/>
+   <fraction n="0.1318" ref="H"/>
+   <fraction n="0.3328" ref="O"/>
+</material>
+<material name="G10" state="solid">
+ <D value="1.3" unit="g/cm3"/>
+<fraction n="0.773" ref="G4_SILICON_DIOXIDE"/>
+ <fraction n="0.147" ref="Epoxy"/>
+ <fraction n="0.080" ref="G4_Cl"/>
+</material>
+  */
   G4Box* solidWorld =    
     new G4Box("World",                       //its name
 	      0.5*world_sizeXY, 0.5*world_sizeXY, 0.5*world_sizeZ);     //its size
@@ -64,33 +92,38 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   G4Box* solidSh =    
     new G4Box("solidSh",                    //its name
-	      0.5*2*cm, 0.5*2*cm, 0.5*5*cm); //its size
+	      0.5*2*cm, 0.5*2*cm, 0.5*3*cm); //its size
                      
-  G4Box* solidFB =    
-    new G4Box("solidFB",                    //its name
-	      0.5*2*cm, 0.5*2*cm, 0.5*1*mm); //its size
+  G4Box* solidF =    
+    new G4Box("solidF",                    //its name
+	      0.5*1*cm, 0.5*1*cm, 0.5*3*mm); //its size
+
+  G4Box* solidB =    
+    new G4Box("solidB",                    //its name
+	      0.5*1*cm, 0.5*1*cm, 0.5*38*mm); //its size
+
   G4Box* solidMid =    
-    new G4Box("solidFB",                    //its name
-	      0.5*2*cm, 0.5*2*cm, 0.5*1*cm); //its size
+    new G4Box("solidMid",                    //its name
+	      0.5*1*cm, 0.5*1*cm, 0.5*1*mm); //its size
 
   G4LogicalVolume* logicSh =                         
     new G4LogicalVolume(solidSh,            //its solid
-                        Pb,             //its material
+                        W,             //its material
                         "logicSh");         //its name
   G4LogicalVolume* logicF =                         
-    new G4LogicalVolume(solidFB,            //its solid
-                        SiO2,             //its material
+    new G4LogicalVolume(solidF,            //its solid
+                        W,             //its material
                         "logicF");         //its name
-  G4LogicalVolume* logicB =                         
-    new G4LogicalVolume(solidFB,            //its solid
-                        SiO2,             //its material
-                        "logicB");         //its name
-  G4LogicalVolume* logicMid =
+  G4LogicalVolume* logicMid =                         
     new G4LogicalVolume(solidMid,            //its solid
-                        SiO2,             //its material
+                        G10,             //its material
                         "logicMid");         //its name
+  G4LogicalVolume* logicB =
+    new G4LogicalVolume(solidB,            //its solid
+                        Cu,             //its material
+                        "logicB");         //its name
 
-  new G4PVPlacement(0,                       //no rotation
+/*  new G4PVPlacement(0,                       //no rotation
                     G4ThreeVector(0,0,-4*cm),
                     logicSh,                //its logical volume
                     "shield",              //its name
@@ -98,9 +131,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking
- 
+*/ 
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,-5.5*mm),
+                    G4ThreeVector(0,0,-2.0*mm),
                     logicF,                //its logical volume
                     "front",              //its name
                     logicWorld,              //its mother  volume
@@ -109,7 +142,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                     checkOverlaps);          //overlaps checking
  
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,5.5*mm),
+                    G4ThreeVector(0,0,19.5*mm),
                     logicB,                //its logical volume
                     "back",              //its name
                     logicWorld,              //its mother  volume

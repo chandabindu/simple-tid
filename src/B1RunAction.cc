@@ -143,6 +143,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     //  << G4endl;
 
     G4cout << nofEvents << " " << dose/gray << " " << rmsDose/gray <<G4endl;
+    G4cout << nofEvents << " " << edep/nofEvents << " " << mass <<G4endl;
   }
 }
   

@@ -30,8 +30,8 @@ public:
   
 private:
   G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
-  //TFile *fin;
-  //TH1F *hE;
+  TFile *fin;
+  TH1F *hE;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -14,7 +14,7 @@
 
 B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
-  fParticleGun(0)
+  fParticleGun(0),fin(0), hE(0)
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -28,8 +28,8 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(6.*MeV);
-  /*fin=TFile::Open("./2bounce_electron.root","READ");
-  if(fin){
+  //fin =TFile::Open(Form("electron.root"),"READ");
+  /*if(fin){
     fin->ls();
   }else{
     G4cout<<"can't open file"<<G4endl;
@@ -60,11 +60,11 @@ B1PrimaryGeneratorAction::~B1PrimaryGeneratorAction()
 void B1PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-  G4double x0 = 2*cm*(G4UniformRand()-0.5);
-  G4double y0 = 2*cm*(G4UniformRand()-0.5);
+  G4double x0 = 1*cm*(G4UniformRand()-0.5);
+  G4double y0 = 1*cm*(G4UniformRand()-0.5);
   G4double z0 = -7*cm;
   //G4double energy = hE->GetRandom()*MeV;
-  G4double energy = 6*MeV;
+  G4double energy = 200*MeV;
   fParticleGun->SetParticleEnergy(energy);
   fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
 
